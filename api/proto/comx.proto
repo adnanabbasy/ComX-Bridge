@@ -1,0 +1,139 @@
+// api/proto/comx.proto
+syntax = "proto3";
+
+package comx.v1;
+
+option go_package = "github.com/commatea/ComX-Bridge/api/proto/v1";
+option csharp_namespace = "ComxBridge.Grpc";
+
+// ============== Service Definition ==============
+
+service ComxService {
+    // Engine Management
+    rpc GetStatus(GetStatusRequest) returns (StatusResponse);
+
+    // Gateway Management
+    rpc ListGateways(ListGatewaysRequest) returns (ListGatewaysResponse);
+    rpc GetGateway(GetGatewayRequest) returns (GatewayInfo);
+    rpc AddGateway(AddGatewayRequest) returns (GatewayInfo);
+    rpc RemoveGateway(RemoveGatewayRequest) returns (RemoveGatewayResponse);
+
+    // Data Transfer
+    rpc Send(SendRequest) returns (SendResponse);
+    rpc Receive(ReceiveRequest) returns (ReceiveResponse);
+
+    // Protocol Commands
+    rpc Execute(ExecuteRequest) returns (ExecuteResponse);
+
+    // Streaming
+    rpc Subscribe(SubscribeRequest) returns (stream Message);
+}
+
+// ============== Message Definitions ==============
+
+message GetStatusRequest {}
+
+message StatusResponse {
+    bool running = 1;
+    int32 gateway_count = 2;
+    map<string, GatewayStatus> gateways = 3;
+}
+
+message GatewayStatus {
+    string name = 1;
+    ConnectionState state = 2;
+    uint64 messages_sent = 3;
+    uint64 messages_received = 4;
+    uint64 bytes_sent = 5;
+    uint64 bytes_received = 6;
+    uint64 errors = 7;
+}
+
+enum ConnectionState {
+    DISCONNECTED = 0;
+    CONNECTING = 1;
+    CONNECTED = 2;
+    RECONNECTING = 3;
+    ERROR = 4;
+}
+
+message ListGatewaysRequest {}
+
+message ListGatewaysResponse {
+    repeated GatewayInfo gateways = 1;
+}
+
+message GetGatewayRequest {
+    string name = 1;
+}
+
+message GatewayInfo {
+    string name = 1;
+    ConnectionState state = 2;
+    TransportConfig transport = 3;
+    ProtocolConfig protocol = 4;
+}
+
+message TransportConfig {
+    string type = 1;
+    string address = 2;
+    map<string, string> options = 3;
+}
+
+message ProtocolConfig {
+    string type = 1;
+    map<string, string> options = 2;
+}
+
+message AddGatewayRequest {
+    string name = 1;
+    TransportConfig transport = 2;
+    ProtocolConfig protocol = 3;
+}
+
+message RemoveGatewayRequest {
+    string name = 1;
+}
+
+message RemoveGatewayResponse {
+    bool success = 1;
+}
+
+message SendRequest {
+    string gateway = 1;
+    bytes data = 2;
+}
+
+message SendResponse {
+    int32 bytes_sent = 1;
+}
+
+message ReceiveRequest {
+    string gateway = 1;
+    int32 timeout_ms = 2;
+}
+
+message ReceiveResponse {
+    bytes data = 1;
+}
+
+message ExecuteRequest {
+    string gateway = 1;
+    string command = 2;
+    map<string, string> parameters = 3;
+}
+
+message ExecuteResponse {
+    bool success = 1;
+    bytes data = 2;
+    string error = 3;
+}
+
+message SubscribeRequest {
+    string gateway = 1;
+}
+
+message Message {
+    bytes data = 1;
+    int64 timestamp = 2;
+}

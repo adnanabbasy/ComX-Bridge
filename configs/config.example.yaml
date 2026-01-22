@@ -1,0 +1,181 @@
+# ComX-Bridge Configuration Example
+# 어떤 통신이든 연결하는 하나의 엔진
+
+# 서버 설정
+server:
+  host: "0.0.0.0"
+  port: 8080
+  grpc_port: 9090
+
+# 로깅 설정
+logging:
+  level: "info"          # debug, info, warn, error
+  format: "text"         # json, text
+  output: "stdout"       # stdout, file
+  file: "/var/log/comx/comx.log"
+
+# 게이트웨이 설정
+gateways:
+  # Serial (RS232/RS485) 게이트웨이 예제
+  - name: "serial-modbus"
+    enabled: true
+    transport:
+      type: "serial"
+      address: "/dev/ttyUSB0"
+      options:
+        baudrate: 9600
+        databits: 8
+        parity: "none"
+        stopbits: 1
+        flow_control: "none"
+      timeout: 1s
+      buffer_size: 4096
+      reconnect:
+        enabled: true
+        max_attempts: 0
+        initial_delay: 1s
+        max_delay: 30s
+        multiplier: 2.0
+    protocol:
+      type: "modbus-rtu"
+      options:
+        slave_id: 1
+      timeout: 1s
+    parser:
+      type: "length"
+      max_packet_size: 256
+      options:
+        length_offset: 2
+        length_size: 1
+        length_adjust: 2
+
+  # TCP 클라이언트 게이트웨이 예제
+  - name: "tcp-modbus"
+    enabled: true
+    transport:
+      type: "tcp"
+      address: "192.168.1.100:502"
+      options:
+        keepalive: true
+        no_delay: true
+        connect_timeout: "10s"
+      timeout: 5s
+      buffer_size: 8192
+      reconnect:
+        enabled: true
+        max_attempts: 10
+        initial_delay: 1s
+        max_delay: 60s
+    protocol:
+      type: "modbus-tcp"
+      options:
+        unit_id: 1
+
+  # UDP 게이트웨이 예제
+  - name: "udp-sensor"
+    enabled: false
+    transport:
+      type: "udp"
+      address: "0.0.0.0:5000"
+      options:
+        multicast: false
+      timeout: 5s
+    protocol:
+      type: "raw"
+    parser:
+      type: "delimiter"
+      options:
+        end: [0x0D, 0x0A]  # CRLF
+        include_delimiters: false
+
+  # MQTT 게이트웨이 예제
+  - name: "mqtt-iot"
+    enabled: false
+    transport:
+      type: "mqtt"
+      address: "tcp://broker.local:1883"
+      options:
+        client_id: "comx-bridge-001"
+        username: ""
+        password: ""
+        clean_session: true
+        qos: 1
+        topics:
+          - "sensors/#"
+          - "devices/+/data"
+      timeout: 30s
+    protocol:
+      type: "json"
+
+# 플러그인 설정
+plugins:
+  directory: "./plugins"
+  auto_load: true
+  sandbox: true
+  # 개별 플러그인 설정
+  configs:
+    - name: "custom-protocol"
+      enabled: true
+      options:
+        custom_option: "value"
+
+# AI 엔진 설정
+ai:
+  enabled: false
+  # LLM 프로바이더 설정 (NEW)
+  llm:
+    provider: "openai"           # openai, gemini, claude, ollama
+    api_key: "${OPENAI_API_KEY}" # 환경변수 참조 가능 (예: ${GEMINI_API_KEY})
+    model: "gpt-4"               # 사용할 모델
+    temperature: 0.7             # 생성 온도 (0.0 ~ 1.0)
+    max_tokens: 2048             # 최대 생성 토큰 수
+    timeout: 60                  # 요청 타임아웃 (초)
+    # Ollama 전용 설정
+    ollama_url: "http://localhost:11434"
+    # 커스텀 엔드포인트 (선택)
+    # base_url: "https://api.openai.com/v1"
+  sidecar:
+    address: "localhost:50051"
+    timeout: 30s
+  features:
+    anomaly_detection: true    # 통신 이상 감지
+    protocol_analysis: true    # 프로토콜 자동 분석
+    auto_optimize: false       # 자동 최적화
+    code_generation: false     # 코드 자동 생성
+  models:
+    protocol_analyzer: "local"  # local, llm (LLM 사용 시 llm으로 설정)
+    anomaly_detector: "local"
+
+# 메트릭스 설정
+metrics:
+  enabled: true
+  endpoint: "/metrics"
+  interval: 10s
+
+# API 설정
+api:
+  rest:
+    enabled: true
+    port: 8080
+    cors:
+      enabled: true
+      origins: ["*"]
+  websocket:
+    enabled: true
+    path: "/ws"
+  grpc:
+    enabled: true
+    port: 9090
+
+# 보안 설정
+security:
+  auth:
+    enabled: false
+    type: "jwt"  # jwt, basic, api_key
+    jwt:
+      secret: "your-secret-key"
+      expiry: 24h
+  tls:
+    enabled: false
+    cert_file: "/etc/comx/certs/server.crt"
+    key_file: "/etc/comx/certs/server.key"
